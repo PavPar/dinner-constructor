@@ -1,5 +1,6 @@
 package ru.practicum.dinner;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -41,25 +42,51 @@ public class Main {
         System.out.println("Введите название блюда:");
         String dishName = scanner.nextLine();
 
-        // добавьте новое блюдо
+        dc.registerNewDish(dishType,dishName);
     }
 
     private static void generateDishCombo() {
+        if(!dc.hasDishes()){
+            System.out.println("Добавьте хотя бы одно блюдо.");
+            return;
+        }
+
         System.out.println("Начинаем конструировать обед...");
 
         System.out.println("Введите количество наборов, которые нужно сгенерировать:");
         int numberOfCombos = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.println("Вводите типы блюда, разделяя символом переноса строки (enter). Для завершения ввода введите пустую строку");
-        String nextItem = scanner.nextLine();
-
-        //реализуйте ввод типов блюд
-        while (!nextItem.isEmpty()) {
-
+        if(numberOfCombos < 1){
+            System.out.println("Неправильное число наборов (Должно быть больше нуля). Генерация не удалась");
+            return;
         }
 
-        // сгенерируйте комбинации блюд и выведите на экран
+        System.out.println("Вводите типы блюда, разделяя символом переноса строки (enter). Для завершения ввода введите пустую строку");
+        String nextItem  = "placeholder";
 
+        ArrayList<String> dishTypesInputList = new ArrayList<>();
+
+        while (!nextItem.isEmpty()) {
+            nextItem = scanner.nextLine();
+
+            if(!nextItem.isEmpty()){
+                if(!dc.hasDishType(nextItem)){
+                    System.out.println("Такого типа нет. Пожалуйста выберите другой тип блюда");
+                    continue;
+                }
+                dishTypesInputList.add(nextItem);
+            }
+        }
+
+        if(dishTypesInputList.isEmpty()){
+            System.out.println("Список пустой. Генерация не получится");
+            return;
+        }
+
+        for (int i = 0; i < numberOfCombos; i++) {
+            System.out.println("Комбо "+ (i + 1));
+            System.out.println(dc.generateDishCombo(dishTypesInputList));
+        }
     }
 }
